@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>길라잡이</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Noto Sans KR', sans-serif;
+      }
+
+      header {
+        flex: 0 0 auto; /* 고정 높이 */
+        background: linear-gradient(to right, #2c3e50, #4ca1af);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+        border-bottom: 5px solid #34495e; /* 어두운 경계선 */
+      }
+
+      header h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      header p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      nav {
+        background-color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      nav ul {
+        display: flex; /* 가로 배치 */
+        justify-content: space-around; /* 항목 간 간격 균등 */
+        padding: 10px;
+        list-style: none;
+        margin: 0;
+      }
+
+      nav li {
+        flex: 1; /* 각 항목이 동일한 너비를 가짐 */
+      }
+
+      nav a {
+        display: block;
+        position: relative;
+        height: 120px; /* nav 높이 */
+        text-decoration: none;
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      nav a:hover {
+        transform: scale(1.05); /* 호버 시 확대 */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 10; /* 다른 요소들보다 앞쪽으로 */
+        position: relative; /* z-index가 적용되도록 설정 */
+      }
+
+      nav .overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* 어두운 오버레이 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+      }
+
+      nav a:hover .overlay {
+        background-color: rgba(0, 0, 0, 0.3); /* 호버 시 오버레이 밝게 */
+      }
+
+      nav span {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* 텍스트 그림자 */
+      }
+
+      .content {
+        display: flex; /* 수평 정렬 */
+        gap: 20px; /* 요소 간 간격 */
+        padding: 20px;
+      }
+
+      section {
+        display: flex;
+        justify-content: center; /* 수평 가운데 정렬 */
+        align-items: flex-start; /* 수직 상단 정렬 */
+        gap: 40px; /* 박스 사이 간격 */
+        padding: 40px;
+        flex-wrap: wrap; /* 화면 작을 때 줄바꿈 허용 */
+      }
+
+      .section {
+        flex: 1; /* section이 남은 공간을 차지 */
+        background: #ffffff;
+        padding: 30px;
+        box-sizing: border-box;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section h2 {
+        font-size: 2rem;
+        color: #2d6a4f;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #2d6a4f;
+        padding-bottom: 10px;
+      }
+
+      .section p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .section img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+
+      .box {
+        display: flex;
+        flex-direction: column; /* 사진과 이름을 세로로 정렬 */
+        align-items: center; /* 가운데 정렬 */
+        text-align: center;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+        width: 500px; /* 박스 크기 통일 */
+        font-size: 1.2rem;
+        overflow: hidden;
+        box-sizing: border-box;
+        height: 400px;
+        min-width: 400px;
+      }
+
+      .back-img {
+        width: 100%; /* 사진 크기 통일 */
+        object-fit: cover; /* 사진 비율 유지 */
+        margin-bottom: 10px; /* 사진과 이름 사이 간격 */
+      }
+      .img-slider {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 10px;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 10px;
+      }
+
+      .img-slider img {
+        width: 100%;
+        flex: 0 0 100%;
+        scroll-snap-align: center;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      footer {
+        flex: 0 0 auto; /* 고정 높이 */
+        height: 100px; /* 고정 높이 */
+        background-color: #2d6a4f;
+        color: white;
+        display: flex; /* Flexbox 사용 */
+        align-items: center; /* 수직 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        border-top: 5px solid #184e77;
+      }
+
+      footer p {
+        font-size: 1rem;
+        margin: 0;
+      }
+
+      footer a {
+        color: #f0f4f8;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      footer a:hover {
+        color: #cce3de;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>길라잡이</h1>
+      <p>하늘, 바다, 육지에서 살아가는 동물들을 만나보세요.</p>
+    </header>
+
+    <nav>
+      <ul>
+        <li>
+          <a href="sky.html" style="background-image: url('sky.jpg')">
+            <div class="overlay">
+              <span>하늘</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="ocean.html" style="background-image: url('ocean.jpg')">
+            <div class="overlay">
+              <span>바다</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="ground.html" style="background-image: url('ground.jpg')">
+            <div class="overlay">
+              <span>육지</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <section>
+      <div class="box">
+        <div class="img-slider">
+          <img src="sky.jpg" alt="테마 이미지" />
+          <img src="ground.jpg" alt="테마 이미지" />
+          <img src="ocean.jpg" alt="테마 이미지" />
+        </div>
+      </div>
+      <div class="box">
+        <h2>이용 방법</h2>
+        <p>
+          하늘, 육지, 바다 버튼을 눌러보세요!<br />
+          그곳에서 살고 있는 여러 동물들을 만날 수 있습니다.<br />
+          동물들을 클릭하면 사진과 다양한 정보를 확인할 수 있어요.<br />
+          각 동물의 서식지와 특징, 생존 방식 등을 알아보며<br />
+          자연 속 생명들의 놀라운 세계를 함께 탐험해보세요!
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 길라잡이 | All Rights Reserved</p>
+    </footer>
+
+    <script>
+      const images = ['land.jpg', 'sea.jpg', 'sky.jpg'];
+      function showImage(index) {
+        document.getElementById('themeImage').src = images[index];
+      }
+    </script>
+  </body>
+</html>
